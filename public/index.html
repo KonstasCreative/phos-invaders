@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Space Invaders</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <canvas id="gameCanvas"></canvas>
+    <div id="gameStartDiv" class="gameUI">
+      <h1>
+        Space <br />
+        Invaders
+      </h1>
+      <p>Scan the QR code below to start the game on your phone!</p>
+      <div id="qrContainer"></div>
+      <p class="signature">
+        Created by <img class="yolt-logo" src="assets/yoltlabs-logo.png" />
+      </p>
+    </div>
+    <div id="gameEndDiv" class="gameUI">
+      <p>Game Over</p>
+      <h1>You <span id="gameWinLoseSpan"></span></h1>
+      <h1>Final Score: <span id="gameEndScoreSpan"></span></h1>
+      <button id="gameRestartBtn" class="primaryBtn">PLAY AGAIN</button>
+    </div>
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+    <!-- Socket.IO client served by your Node server -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/phaser/dist/phaser.js"></script>
+    <script type="module" src="js/main.js"></script>
+    <script>
+      function makeSessionId(length = 6) {
+        if (crypto.randomUUID) {
+          return crypto.randomUUID().slice(0, length);
+        }
+        // fallback: random base36 string
+        return Math.random()
+          .toString(36)
+          .substring(2, 2 + length);
+      }
+
+      const sessionId = makeSessionId(6);
+      const host = window.location.hostname; // 192.168.190.131
+      const port = window.location.port; // "3000"
+      const controllerUrl = `http://${host}:${port}/controller.html?session=${sessionId}`;
+
+      document.getElementById("qrContainer").dataset.session = sessionId;
+
+      var qrcode = new QRCode("qrContainer", {
+        text: controllerUrl,
+        width: 280,
+        height: 280,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H,
+      });
+    </script>
+  </body>
+</html>

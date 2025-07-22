@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Space Invaders Controller</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100svh;
+        margin: 0;
+        background-color: #111;
+        color: #fff;
+      }
+
+      h1 {
+        margin-bottom: 2rem;
+        font-size: 2rem;
+        /* prevent text from being selected */
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        /* remove tap‑highlight on mobile */
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      }
+
+      .btn-container {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      button {
+        padding: 1rem 2rem;
+        font-size: 1.5rem;
+        background-color: #00ffcc;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.2s ease;
+        /* prevent text from being selected */
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+        /* remove tap‑highlight on mobile */
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
+        /* make touch interactions only trigger your JS listeners */
+        touch-action: manipulation;
+      }
+
+      button:active {
+        background-color: #00ccaa;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Game Controller</h1>
+    <div class="btn-container">
+      <button id="leftBtn">←</button>
+      <button id="rightBtn">→</button>
+    </div>
+    <button id="fireBtn">FIRE 🔥</button>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      // Get session ID from URL
+      const params = new URLSearchParams(window.location.search);
+      const sessionId = params.get("session");
+      const leftBtn = document.getElementById("leftBtn");
+      const rightBtn = document.getElementById("rightBtn");
+      const fireBtn = document.getElementById("fireBtn");
+
+      if (!sessionId) {
+        alert("No session ID found!");
+      } else {
+        // Join session
+        socket.emit("join-controller", sessionId);
+      }
+
+      // Send control actions
+      const emit = (type, action) => {
+        socket.emit("control", { sessionId, type, action });
+      };
+
+      // LEFT button
+      leftBtn.addEventListener("mousedown", () => emit("press", "left"));
+      leftBtn.addEventListener("touchstart", () => emit("press", "left"));
+      leftBtn.addEventListener("mouseup", () => emit("release", "left"));
+      leftBtn.addEventListener("mouseleave", () => emit("release", "left"));
+      leftBtn.addEventListener("touchend", () => emit("release", "left"));
+
+      // RIGHT button
+      rightBtn.addEventListener("mousedown", () => emit("press", "right"));
+      rightBtn.addEventListener("touchstart", () => emit("press", "right"));
+      rightBtn.addEventListener("mouseup", () => emit("release", "right"));
+      rightBtn.addEventListener("mouseleave", () => emit("release", "right"));
+      rightBtn.addEventListener("touchend", () => emit("release", "right"));
+
+      // FIRE button – now press/release
+      fireBtn.addEventListener("mousedown", () => emit("press", "fire"));
+      fireBtn.addEventListener("touchstart", () => emit("press", "fire"));
+      fireBtn.addEventListener("mouseup", () => emit("release", "fire"));
+      fireBtn.addEventListener("mouseleave", () => emit("release", "fire"));
+      fireBtn.addEventListener("touchend", () => emit("release", "fire"));
+    </script>
+  </body>
+</html>
