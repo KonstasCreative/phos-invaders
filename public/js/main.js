@@ -11,7 +11,7 @@ const sessionId = document.getElementById("qrContainer").dataset.session;
 document.getElementById("qrContainer").dataset.session = sessionId;
 
 // 3️⃣ Connect to Socket.IO and join
-const socket = io();
+const socket = io("https://phos-invaders.onrender.com");
 socket.emit("join-game", sessionId);
 
 // 4️⃣ When controller arrives, hide start screen and start Phaser

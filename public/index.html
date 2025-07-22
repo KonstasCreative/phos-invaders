@@ -47,9 +47,7 @@
       }
 
       const sessionId = makeSessionId(6);
-      const host = window.location.hostname; // 192.168.190.131
-      const port = window.location.port; // "3000"
-      const controllerUrl = `http://${host}:${port}/controller.html?session=${sessionId}`;
+      const controllerUrl = `https://phos-invaders.onrender.com/controller.html?session=${sessionId}`;
 
       document.getElementById("qrContainer").dataset.session = sessionId;
 
