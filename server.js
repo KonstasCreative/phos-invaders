@@ -49,6 +49,12 @@ io.on("connection", (socket) => {
 
 // Start listening
 const PORT = process.env.PORT || 3000;
+
+// a lightweight health‑check endpoint
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
 server.listen(PORT, () => {
   console.log(`🚀 Server up: http://localhost:${PORT}`);
 });
